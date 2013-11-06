@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="ic_base_rest.listener.route" class="IC\Bundle\Base\RestBundle\EventListener\Symfony\RequestListener">
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
+            <call method="setRouter">
+                <argument type="service" id="router"/>
+            </call>
+            <call method="setTokenService">
+                <argument type="service" id="ic_core_oauth2.service.token"/>
+            </call>
+        </service>
+    </services>
+
+</container>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="ICBaseRestBundle_Rest_Filter" pattern="/{packageName}/{subPackageName}/{entityName}">
+        <default key="_controller">ICBaseRestBundle:Rest:filter</default>
+        <requirement key="_method">GET</requirement>
+        <option key="expose">true</option>
+    </route>
+
+    <route id="ICBaseRestBundle_Rest_Post" pattern="/{packageName}/{subPackageName}/{entityName}">
+        <default key="_controller">ICBaseRestBundle:Rest:post</default>
+        <requirement key="_method">POST</requirement>
+        <option key="expose">true</option>
+    </route>
+
+    <route id="ICBaseRestBundle_Rest_Get" pattern="/{packageName}/{subPackageName}/{entityName}/{id}">
+        <default key="_controller">ICBaseRestBundle:Rest:get</default>
+        <requirement key="_method">GET</requirement>
+        <option key="expose">true</option>
+    </route>
+
+    <route id="ICBaseRestBundle_Rest_Put" pattern="/{packageName}/{subPackageName}/{entityName}/{id}">
+        <default key="_controller">ICBaseRestBundle:Rest:put</default>
+        <requirement key="_method">PUT</requirement>
+        <option key="expose">true</option>
+    </route>
+
+    <route id="ICBaseRestBundle_Rest_Delete" pattern="/{packageName}/{subPackageName}/{entityName}/{id}">
+        <default key="_controller">ICBaseRestBundle:Rest:delete</default>
+        <requirement key="_method">DELETE</requirement>
+        <option key="expose">true</option>
+    </route>
+
+</routes>

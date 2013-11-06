@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="ic_base_rest.service.resource_transcoder" class="IC\Bundle\Base\RestBundle\Service\ResourceTranscoderService">
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service id="ic_base_rest.service.rest" class="IC\Bundle\Base\RestBundle\Service\RestService">
+            <call method="setSerializerService">
+                <argument type="service" id="serializer"/>
+            </call>
+            <call method="setResourceTranscoderService">
+                <argument type="service" id="ic_base_rest.service.resource_transcoder"/>
+            </call>
+
+            <call method="setAuthorizationService">
+                <argument type="service" id="ic_base_security.service.authorization"/>
+            </call>
+        </service>
+
+        <service id="ic_base_rest.service.mediator" class="IC\Bundle\Base\RestBundle\Service\MediatorService">
+            <call method="setSerializerService">
+                <argument type="service" id="serializer"/>
+            </call>
+            <call method="setFilterService">
+                <argument type="service" id="dms.filter"/>
+            </call>
+            <call method="setValidatorService">
+                <argument type="service" id="validator"/>
+            </call>
+        </service>
+    </services>
+
+</container>

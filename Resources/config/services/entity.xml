@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <!-- Entity Services: Ethnicity -->
+        <service id="ic_base_rest.repository.foo"
+                 class="IC\Bundle\Base\ComponentBundle\Entity\Repository\EntityRepository"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository">
+            <argument>IC\Bundle\Base\RestBundle\Entity\Foo</argument>
+            <call method="setLogger">
+                <argument type="service" id="logger"/>
+            </call>
+        </service>
+
+    </services>
+
+</container>
