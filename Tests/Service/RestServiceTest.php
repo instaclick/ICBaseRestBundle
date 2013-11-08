@@ -341,10 +341,11 @@ class RestServiceTest extends TestCase
      * @param array                                         $allowedMethodList The HTTP methods permitted by the resource service
      * @param \IC\Bundle\Base\ComponentBundle\Entity\Entity $entity            The entity to be returned by the resource service
      * @param string                                        $content           The content to be returned by the serializer
+     * @param integer                                       $statusCode        The http status code to be returned by the serializer
      *
      * @dataProvider provideDataForTestPutSuccessPath
      */
-    public function testPutSuccessPath(Request $request, array $allowedMethodList, $entity, $content)
+    public function testPutSuccessPath(Request $request, array $allowedMethodList, $entity, $content, $statusCode)
     {
         $resourceService           = $this->createResourceServiceMock($allowedMethodList, array('put' => $entity));
         $resourceTranscoderService = $this->createResourceTranscoderServiceMock($request->getPathInfo(), $resourceService);
@@ -355,7 +356,7 @@ class RestServiceTest extends TestCase
 
         $response = $restService->put($request);
 
-        $this->assertHttpStatusAndContent($response, 200, $content);
+        $this->assertHttpStatusAndContent($response, $statusCode, $content);
     }
 
     /**
@@ -366,8 +367,9 @@ class RestServiceTest extends TestCase
     public function provideDataForTestPutSuccessPath()
     {
         return array(
-            array(Request::create('/', 'PUT'), array('PUT'), new Foo(), 'some content'),
-            array(Request::create('/', 'PUT'), array('DELETE', 'GET', 'POST', 'PUT'), new Foo(), 'some content'),
+            array(Request::create('/', 'PUT'), array('PUT'), new Foo(), 'some content', 200),
+            array(Request::create('/', 'PUT'), array('DELETE', 'GET', 'POST', 'PUT'), new Foo(), 'some content', 200),
+            array(Request::create('/', 'PUT'), array('DELETE', 'GET', 'POST', 'PUT'), null, 'Resource not found.', 404),
         );
     }
 
@@ -756,6 +758,9 @@ class RestServiceTest extends TestCase
     {
         $this->assertEquals($statusCode, $response->getStatusCode());
         $this->assertEquals($content, $response->getContent());
-        $this->assertEquals(strlen($content), $response->headers->get('Content-length'));
+
+        $contentLength = $statusCode === 404 ? 0 : strlen($content);
+
+        $this->assertEquals($contentLength, $response->headers->get('Content-length'));
     }
 }
