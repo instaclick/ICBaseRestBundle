@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Test for RequestListener
  *
  * @group Unit
- * @group EventListener 
+ * @group EventListener
  *
  * @author Guilherme Blanco <gblanco@nationalfibre.net>
  */
@@ -187,7 +187,7 @@ class RequestListenerTest extends TestCase
         $request->headers->add(array('Authorization' => 'mockAuthorizationToken'));
 
         $router       = $this->createRouterMock($request->getPathInfo(), 'ICBaseRestBundle_Rest_Index');
-        $tokenService = $this->createMock('IC\Bundle\Core\OAuth2Bundle\Service\TokenService');
+        $tokenService = $this->createMock('IC\Bundle\Core\SecurityBundle\Service\TokenService');
 
         $tokenService->expects($this->once())
             ->method('validateAccessToken')
@@ -324,11 +324,11 @@ class RequestListenerTest extends TestCase
     /**
      * Mock tokenService
      *
-     * @return \IC\Bundle\Core\OAuth2Bundle\Service\TokenService
+     * @return \IC\Bundle\Core\SecurityBundle\Service\TokenService
      */
     private function createTokenServiceMock()
     {
-        $tokenService = $this->createMock('IC\Bundle\Core\OAuth2Bundle\Service\TokenService');
+        $tokenService = $this->createMock('IC\Bundle\Core\SecurityBundle\Service\TokenService');
         $user         = $this->createMock('\Symfony\Component\Security\Core\User\UserInterface');
 
         $tokenService->expects($this->any())
@@ -358,8 +358,8 @@ class RequestListenerTest extends TestCase
     /**
      * Create a RequestListener instance configured
      *
-     * @param \Symfony\Component\Routing\RouterInterface        $router       Symfony Router
-     * @param \IC\Bundle\Core\OAuth2Bundle\Service\TokenService $tokenService TokenService Service
+     * @param \Symfony\Component\Routing\RouterInterface          $router       Symfony Router
+     * @param \IC\Bundle\Core\SecurityBundle\Service\TokenService $tokenService TokenService Service
      *
      * @return \IC\Bundle\Base\RestBundle\EventListener\Symfony\RequestListener
      */
