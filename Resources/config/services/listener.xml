@@ -8,7 +8,7 @@
                 <argument type="service" id="router"/>
             </call>
             <call method="setTokenService">
-                <argument type="service" id="ic_core_oauth2.service.token"/>
+                <argument type="service" id="ic_user_security.service.token"/>
             </call>
         </service>
     </services>

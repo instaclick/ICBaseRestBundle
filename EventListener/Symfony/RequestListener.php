@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use IC\Bundle\Core\SecurityBundle\Service\TokenService;
+use IC\Bundle\User\SecurityBundle\Service\TokenService;
 
 /**
  * The request listener to intercept and validate possible REST requests.
@@ -39,7 +39,7 @@ class RequestListener
     protected $router;
 
     /**
-     * @var \IC\Bundle\Core\SecurityBundle\Service\TokenService
+     * @var \IC\Bundle\User\SecurityBundle\Service\TokenService
      */
     protected $tokenService;
 
@@ -117,7 +117,7 @@ class RequestListener
     /**
      * Define the token service that generate OAuth2 tokens
      *
-     * @param \IC\Bundle\Core\SecurityBundle\Service\TokenService $tokenService
+     * @param \IC\Bundle\User\SecurityBundle\Service\TokenService $tokenService
      */
     public function setTokenService(TokenService $tokenService)
     {
