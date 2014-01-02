@@ -186,15 +186,15 @@ class RequestListenerTest extends TestCase
         $request      = Request::create('/', 'GET');
         $request->headers->add(array('Authorization' => 'mockAuthorizationToken'));
 
-        $router       = $this->createRouterMock($request->getPathInfo(), 'ICBaseRestBundle_Rest_Index');
-        $tokenService = $this->createMock('IC\Bundle\User\SecurityBundle\Service\TokenService');
+        $router             = $this->createRouterMock($request->getPathInfo(), 'ICBaseRestBundle_Rest_Index');
+        $accessTokenService = $this->createMock('IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface');
 
-        $tokenService->expects($this->once())
-            ->method('validateAccessToken')
+        $accessTokenService->expects($this->once())
+            ->method('validate')
             ->will($this->returnValue(null));
 
         $listener->setRouter($router);
-        $listener->setTokenService($tokenService);
+        $listener->setAccessTokenService($accessTokenService);
 
         $event = $this->createGetResponseEvent($request, HttpKernelInterface::MASTER_REQUEST);
 
@@ -218,11 +218,11 @@ class RequestListenerTest extends TestCase
         $request    = Request::create('/', 'GET');
         $request->headers->add(array('Authorization' => 'mockAuthorizationToken'));
 
-        $routerMock       = $this->createRouterMock($request->getPathInfo(), $routeName);
-        $tokenServiceMock = $this->createTokenServiceMock();
-        $listener         = $this->createRequestListener($routerMock, $tokenServiceMock);
-        $event            = $this->createGetResponseEvent($request, $requestType);
-        $result           = $listener->onKernelRequest($event);
+        $routerMock             = $this->createRouterMock($request->getPathInfo(), $routeName);
+        $accessTokenServiceMock = $this->createAccessTokenServiceMock();
+        $listener               = $this->createRequestListener($routerMock, $accessTokenServiceMock);
+        $event                  = $this->createGetResponseEvent($request, $requestType);
+        $result                 = $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse(), 'Should not have a response yet.');
         $this->assertNull($result);
@@ -250,11 +250,11 @@ class RequestListenerTest extends TestCase
         $request    = Request::create('/', 'GET');
         $request->headers->add(array('Authorization' => 'mockAuthorizationToken'));
 
-        $routerMock       = $this->createFailureRouterMock($request->getPathInfo());
-        $tokenServiceMock = $this->createTokenServiceMock();
-        $listener         = $this->createRequestListener($routerMock, $tokenServiceMock);
-        $event            = $this->createGetResponseEvent($request, HttpKernelInterface::MASTER_REQUEST);
-        $result           = $listener->onKernelRequest($event);
+        $routerMock             = $this->createFailureRouterMock($request->getPathInfo());
+        $accessTokenServiceMock = $this->createAccessTokenServiceMock();
+        $listener               = $this->createRequestListener($routerMock, $accessTokenServiceMock);
+        $event                  = $this->createGetResponseEvent($request, HttpKernelInterface::MASTER_REQUEST);
+        $result                 = $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse(), 'Should not have a response yet.');
         $this->assertNull($result);
@@ -311,10 +311,10 @@ class RequestListenerTest extends TestCase
      */
     private function onKernelRequest($request, $routeName)
     {
-        $routerMock   = $this->createRouterMock($request->getPathInfo(), $routeName);
-        $tokenService = $this->createTokenServiceMock();
-        $listener     = $this->createRequestListener($routerMock, $tokenService);
-        $event        = $this->createGetResponseEvent($request, HttpKernelInterface::MASTER_REQUEST);
+        $routerMock         = $this->createRouterMock($request->getPathInfo(), $routeName);
+        $accessTokenService = $this->createAccessTokenServiceMock();
+        $listener           = $this->createRequestListener($routerMock, $accessTokenService);
+        $event              = $this->createGetResponseEvent($request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener->onKernelRequest($event);
 
@@ -322,20 +322,20 @@ class RequestListenerTest extends TestCase
     }
 
     /**
-     * Mock tokenService
+     * Mock accessTokenService
      *
-     * @return \IC\Bundle\User\SecurityBundle\Service\TokenService
+     * @return \IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface
      */
-    private function createTokenServiceMock()
+    private function createAccessTokenServiceMock()
     {
-        $tokenService = $this->createMock('IC\Bundle\User\SecurityBundle\Service\TokenService');
-        $user         = $this->createMock('\Symfony\Component\Security\Core\User\UserInterface');
+        $accessTokenService = $this->createMock('IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface');
+        $user               = $this->createMock('\Symfony\Component\Security\Core\User\UserInterface');
 
-        $tokenService->expects($this->any())
-            ->method('validateAccessToken')
+        $accessTokenService->expects($this->any())
+            ->method('validate')
             ->will($this->returnValue($user));
 
-        return $tokenService;
+        return $accessTokenService;
     }
 
     /**
@@ -358,17 +358,17 @@ class RequestListenerTest extends TestCase
     /**
      * Create a RequestListener instance configured
      *
-     * @param \Symfony\Component\Routing\RouterInterface          $router       Symfony Router
-     * @param \IC\Bundle\User\SecurityBundle\Service\TokenService $tokenService TokenService Service
+     * @param \Symfony\Component\Routing\RouterInterface                         $router             Symfony Router
+     * @param \IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface $accessTokenService AccessTokenService Interface
      *
      * @return \IC\Bundle\Base\RestBundle\EventListener\Symfony\RequestListener
      */
-    private function createRequestListener($router, $tokenService)
+    private function createRequestListener($router, $accessTokenService)
     {
         $listener = new RequestListener();
 
         $listener->setRouter($router);
-        $listener->setTokenService($tokenService);
+        $listener->setAccessTokenService($accessTokenService);
 
         return $listener;
     }

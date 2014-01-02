@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use IC\Bundle\User\SecurityBundle\Service\TokenService;
+use IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface;
 
 /**
  * The request listener to intercept and validate possible REST requests.
@@ -21,6 +21,7 @@ use IC\Bundle\User\SecurityBundle\Service\TokenService;
  * @author Juti Noppornpitak <jutin@nationalfibre.net>
  * @author Anthon Pang <anthonp@nationalfibre.net>
  * @author Oleksii Strutsynskyi <oleksiis@nationalfibre.net>
+ * @author Paul Munson <pmunson@nationalfibre.net>
  */
 class RequestListener
 {
@@ -39,9 +40,9 @@ class RequestListener
     protected $router;
 
     /**
-     * @var \IC\Bundle\User\SecurityBundle\Service\TokenService
+     * @var \IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface
      */
-    protected $tokenService;
+    protected $accessTokenService;
 
     /**
      * Define the router service
@@ -117,11 +118,11 @@ class RequestListener
     /**
      * Define the token service that generate OAuth2 tokens
      *
-     * @param \IC\Bundle\User\SecurityBundle\Service\TokenService $tokenService
+     * @param \IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface $accessTokenService
      */
-    public function setTokenService(TokenService $tokenService)
+    public function setAccessTokenService(AccessTokenServiceInterface $accessTokenService)
     {
-        $this->tokenService = $tokenService;
+        $this->accessTokenService = $accessTokenService;
     }
 
     /**
@@ -221,7 +222,7 @@ class RequestListener
         }
 
         $tokenString = $request->headers->get('Authorization');
-        $user        = $this->tokenService->validateAccessToken($tokenString, self::SCOPE);
+        $user        = $this->accessTokenService->validate($tokenString, self::SCOPE);
 
         if ($user instanceof UserInterface) {
             return true;

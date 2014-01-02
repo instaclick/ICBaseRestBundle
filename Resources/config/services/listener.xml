@@ -7,8 +7,8 @@
             <call method="setRouter">
                 <argument type="service" id="router"/>
             </call>
-            <call method="setTokenService">
-                <argument type="service" id="ic_user_security.service.token"/>
+            <call method="setAccessTokenService">
+                <argument type="service" id="ic_base_security.service.access_token"/>
             </call>
         </service>
     </services>
