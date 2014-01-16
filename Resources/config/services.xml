@@ -7,7 +7,7 @@
         <!-- Import services which are located in separated files -->
         <import resource="services/entity.xml"/>
         <import resource="services/listener.xml"/>
-        <import resource="services/process.xml"/>
+        <import resource="services/service.xml"/>
         <import resource="services/rest.xml"/>
     </imports>
 
