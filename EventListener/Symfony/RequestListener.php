@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface;
 
 /**
  * The request listener to intercept and validate possible REST requests.
@@ -38,11 +37,6 @@ class RequestListener
      * @var \Symfony\Component\Routing\RouterInterface The router
      */
     protected $router;
-
-    /**
-     * @var \IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface
-     */
-    protected $accessTokenService;
 
     /**
      * Define the router service
@@ -74,11 +68,6 @@ class RequestListener
             case $this->isValidMethod($request->getMethod()):
                 $event->setResponse(
                     new Response(sprintf('The %s method is not supported.', $requestMethod), 405)
-                );
-                break;
-            case $this->isAuthenticatedRequest($request, $event):
-                $event->setResponse(
-                    new Response(sprintf('The request is not authenticated.', $requestMethod), 403)
                 );
                 break;
             case $this->isValidHeader($request):
@@ -113,16 +102,6 @@ class RequestListener
 
 
         $request->setRequestFormat($format);
-    }
-
-    /**
-     * Define the token service that generate OAuth2 tokens
-     *
-     * @param \IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface $accessTokenService
-     */
-    public function setAccessTokenService(AccessTokenServiceInterface $accessTokenService)
-    {
-        $this->accessTokenService = $accessTokenService;
     }
 
     /**
@@ -207,30 +186,6 @@ class RequestListener
         // Header Content-Type validation
         return ( ! empty($requestBody));
     }
-
-    /**
-     * Check for an authenticated Request (with an Auth HTTP header).
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return boolean
-     */
-    protected function isAuthenticatedRequest(Request $request)
-    {
-        if ( ! $request->headers->has('Authorization')) {
-            return false;
-        }
-
-        $tokenString = $request->headers->get('Authorization');
-        $user        = $this->accessTokenService->validate($tokenString, self::SCOPE);
-
-        if ($user instanceof UserInterface) {
-            return true;
-        }
-
-        return false;
-    }
-
 
     /**
      * Get preferable format for Request

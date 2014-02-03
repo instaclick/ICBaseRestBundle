@@ -164,48 +164,6 @@ class RequestListenerTest extends TestCase
     }
 
     /**
-     * Test request non authorized (missing authorization token in the request header)
-     */
-    public function testFailureRequestNonAuthorized()
-    {
-        $request = Request::create('/', 'GET');
-
-        $event = $this->onKernelRequest($request, 'ICBaseRestBundle_Rest_Index');
-
-        $this->assertTrue($event->hasResponse(), 'Should have an error response.');
-        $this->assertEquals($event->getResponse()->getStatusCode(), 403);
-        $this->assertEquals($event->getResponse()->getContent(), 'The request is not authenticated.');
-    }
-
-    /**
-     * Test Token service fails to return a user
-     */
-    public function testFailureTokenService()
-    {
-        $listener     = new RequestListener();
-        $request      = Request::create('/', 'GET');
-        $request->headers->add(array('Authorization' => 'mockAuthorizationToken'));
-
-        $router             = $this->createRouterMock($request->getPathInfo(), 'ICBaseRestBundle_Rest_Index');
-        $accessTokenService = $this->createMock('IC\Bundle\Base\SecurityBundle\Service\AccessTokenServiceInterface');
-
-        $accessTokenService->expects($this->once())
-            ->method('validate')
-            ->will($this->returnValue(null));
-
-        $listener->setRouter($router);
-        $listener->setAccessTokenService($accessTokenService);
-
-        $event = $this->createGetResponseEvent($request, HttpKernelInterface::MASTER_REQUEST);
-
-        $listener->onKernelRequest($event);
-
-        $this->assertTrue($event->hasResponse(), 'Should have an error response.');
-        $this->assertEquals($event->getResponse()->getStatusCode(), 403);
-        $this->assertEquals($event->getResponse()->getContent(), 'The request is not authenticated.');
-    }
-
-    /**
      * Test handle/not handle situations.
      *
      * @param string  $routeName   Route name
@@ -368,7 +326,6 @@ class RequestListenerTest extends TestCase
         $listener = new RequestListener();
 
         $listener->setRouter($router);
-        $listener->setAccessTokenService($accessTokenService);
 
         return $listener;
     }
