@@ -6,6 +6,7 @@
 namespace IC\Bundle\Base\RestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Rest Controller
@@ -18,60 +19,70 @@ class RestController extends Controller
     /**
      * Filter action.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function filterAction()
+    public function filterAction(Request $request)
     {
         $restService = $this->container->get('ic_base_rest.service.rest');
 
-        return $restService->filter($this->getRequest());
+        return $restService->filter($request);
     }
 
     /**
      * Post action.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postAction()
+    public function postAction(Request $request)
     {
         $restService = $this->container->get('ic_base_rest.service.rest');
 
-        return $restService->post($this->getRequest());
+        return $restService->post($request);
     }
 
     /**
      * Get action.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction()
+    public function getAction(Request $request)
     {
         $restService = $this->container->get('ic_base_rest.service.rest');
 
-        return $restService->get($this->getRequest());
+        return $restService->get($request);
     }
 
     /**
      * Put action.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putAction()
+    public function putAction(Request $request)
     {
         $restService = $this->container->get('ic_base_rest.service.rest');
 
-        return $restService->put($this->getRequest());
+        return $restService->put($request);
     }
 
     /**
      * Delete action.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
         $restService = $this->container->get('ic_base_rest.service.rest');
 
-        return $restService->delete($this->getRequest());
+        return $restService->delete($request);
     }
 }
