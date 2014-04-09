@@ -107,7 +107,7 @@ class RequestListener
     /**
      * Check if the current event/request is on the given route.
      *
-     * @param GetResponseEvent $event Event
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event Event
      *
      * @return boolean
      */

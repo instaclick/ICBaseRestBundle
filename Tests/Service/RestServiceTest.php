@@ -606,7 +606,7 @@ class RestServiceTest extends TestCase
      *
      * @param string|null $action
      * @param string|null $className
-     * @param bool        $expected
+     * @param boolean     $expected
      *
      * @return \IC\Bundle\Base\SecurityBundle\Service\AuthorizationService
      */
