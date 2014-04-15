@@ -29,12 +29,12 @@ class RequestListener
      */
     const SCOPE = "api";
     /**
-     * @var array Allowed HTTP Methods
+     * @var array
      */
     protected $allowedMethods = array('GET', 'POST', 'PUT', 'DELETE');
 
     /**
-     * @var \Symfony\Component\Routing\RouterInterface The router
+     * @var \Symfony\Component\Routing\RouterInterface
      */
     protected $router;
 
